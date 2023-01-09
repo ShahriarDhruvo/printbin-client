@@ -6,7 +6,13 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "prepare": "husky install",
+        "check-types": "tsc --pretty --noEmit",
+        "check-format": "prettier --check .",
+        "check-lint": "eslint . --ext ts --ext tsx --ext js",
+        "format": "prettier --write .",
+        "test-all": "yarn run check-format && yarn run check-lint && yarn run check-types && yarn run build"
     },
     "dependencies": {
         "@chakra-ui/react": "^2.4.6",
