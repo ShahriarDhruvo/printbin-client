@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 
 import { CustomTable } from "./customTable";
 import { CustomError, CustomSpinner } from "./frequents";
-import { StatusT, TableStateT, TableStateDV, processValue } from "./helpers";
-
-export interface FilesT {
-    name: string;
-    time: string;
-    status: string;
-}
+import {
+    FilesT,
+    StatusT,
+    TableStateT,
+    TableStateDV,
+    processValue,
+    DUMMY_FILES,
+} from "./helpers";
 
 export const ShowFiles = (): JSX.Element => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -23,39 +24,11 @@ export const ShowFiles = (): JSX.Element => {
         totalPageCount: 0,
     });
 
-    const headers = ["s/n", "name", "time", "status"];
+    const headers = ["s/n", "id", "status", "time"];
 
     // Dummy content
     useEffect(() => {
-        const files = [
-            {
-                name: "lol1",
-                status: "error",
-                time: "2012-01-26T13:51:50.417-07:00",
-            },
-            {
-                name: "lol1",
-                status: "pending",
-                time: "2012-01-26T13:51:50.417-07:00",
-            },
-            {
-                name: "lol1",
-                status: "completed",
-                time: "2012-01-26T13:51:50.417-07:00",
-            },
-            {
-                name: "lol1",
-                status: "pending",
-                time: "2012-01-26T13:51:50.417-07:00",
-            },
-            {
-                name: "lol1",
-                status: "error",
-                time: "2012-01-26T13:51:50.417-07:00",
-            },
-        ];
-
-        setData({ ...data, files });
+        setData({ ...data, files: DUMMY_FILES });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -98,8 +71,7 @@ export const ShowFiles = (): JSX.Element => {
     // }, [tableState, locale]);
 
     const handleStatusColor = (status: string): string => {
-        if (status === "error") return "red";
-        else if (status === "pending") return "orange.500";
+        if (status === "pending") return "orange.500";
         else return "green";
     };
 
@@ -128,9 +100,19 @@ export const ShowFiles = (): JSX.Element => {
                         textAlign="center"
                         textOverflow="ellipsis"
                     >
-                        {processValue(file.name)}
+                        {file.id}
                     </Td>
-                    <Td textAlign="center">
+
+                    {file.status !== undefined && (
+                        <Td
+                            textAlign="center"
+                            textColor={handleStatusColor(file.status)}
+                        >
+                            {processValue(file.status)}
+                        </Td>
+                    )}
+
+                    <Td textAlign="right">
                         {new Date(file.time).toLocaleString("en-US", {
                             hour12: true,
                             month: "short",
@@ -140,12 +122,6 @@ export const ShowFiles = (): JSX.Element => {
                             minute: "numeric",
                             second: "numeric",
                         })}
-                    </Td>
-                    <Td
-                        textAlign="right"
-                        textColor={handleStatusColor(file.status)}
-                    >
-                        {processValue(file.status)}
                     </Td>
                 </Tr>
             ))}

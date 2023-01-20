@@ -1,6 +1,6 @@
 import { IconType } from "react-icons";
 import { useRouter } from "next/router";
-import React, { PropsWithChildren, useContext } from "react";
+import React, { PropsWithChildren } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { IoMdHelp } from "react-icons/io";
 import { FiRefreshCw } from "react-icons/fi";
@@ -29,9 +29,8 @@ import {
 } from "@chakra-ui/react";
 
 import { FeatureWrapper } from ".";
-import { spacing, useTranslation } from "../config";
-import { API_ENDPOINTS, ErrorT, TitleProps } from "./helpers";
-import { AuthenticationContext } from "../contexts/authContext";
+import { ErrorT, TitleProps } from "./helpers";
+import { AppRoutesUI, spacing, useTranslation } from "../config";
 
 export const Title = ({ icon, title, mt }: TitleProps): JSX.Element => (
     <Flex alignItems="center" mx="auto" fontSize="md">
@@ -135,8 +134,6 @@ export const CustomError = ({ error }: { error: ErrorT }): JSX.Element => {
 
 export const SignInPrompt = (): JSX.Element => {
     const { t } = useTranslation();
-    const { locale } = useRouter();
-    const { currentPath } = useContext(AuthenticationContext);
 
     return (
         <FeatureWrapper>
@@ -160,8 +157,8 @@ export const SignInPrompt = (): JSX.Element => {
                         as={Link}
                         variant="link"
                         colorScheme="facebook"
+                        href={AppRoutesUI.SIGN_IN()}
                         textDecoration="none !important"
-                        href={API_ENDPOINTS(locale, currentPath).oauth.login}
                     >
                         <Icon me={2} as={FcGoogle} fontSize="xl" />
                         <Text mt={1}>{t.sign_in_with_google}</Text>

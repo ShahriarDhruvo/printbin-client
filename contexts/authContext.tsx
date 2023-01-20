@@ -33,7 +33,7 @@ export const AuthenticationContextProvider = ({
         void fetchData({
             method: "GET",
             setData: setAuthInfo,
-            url: API_ENDPOINTS().user.is_auth,
+            url: API_ENDPOINTS().is_auth,
         });
 
         setCurrentPath(router.pathname);

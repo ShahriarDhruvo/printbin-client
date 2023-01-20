@@ -110,6 +110,29 @@ export const fetchData = async ({
             },
         });
 
+        // ////////////////////////////////?
+
+        // const config = {
+        //     method: "post",
+        //     url: "http://127.0.0.1:8001/api/v1/auth/login",
+        //     headers: {
+        //         Username: "admin",
+        //         Password: "passwor",
+        //         Accept: "application/json, text/plain, /",
+        //         "Content-Type": "multipart/form-data",
+        //     },
+        // };
+
+        // axios(config)
+        //     .then(function (response) {
+        //         console.log(JSON.stringify(response.data));
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //     });
+
+        // ////////////////////////////////?
+
         const { data, message, error } = response.data;
 
         data !== undefined && setData?.(data);

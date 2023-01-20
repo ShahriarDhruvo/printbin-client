@@ -28,7 +28,7 @@ import { BiSearchAlt } from "react-icons/bi";
 import React, { PropsWithChildren, useState } from "react";
 
 import { FeatureWrapper } from "./wrappers";
-import { CURRENT_DATE, MIN_DATE, processValue, TableStateT } from "./helpers";
+import { processValue, TableStateT } from "./helpers";
 
 export const CustomTable = ({
     headers,
@@ -64,17 +64,13 @@ export const CustomTable = ({
 
     return (
         <Flex direction="column">
-            <Flex
-                gap={5}
-                mb={{ base: 3, md: 5 }}
-                justifyContent="space-between"
-                direction={{ base: "column-reverse", md: "row" }}
-            >
+            <Flex mb={{ base: 3, md: 5 }}>
                 <Flex gap={5} my="auto">
                     <InputGroup>
                         <Input
                             value={searchMsg}
-                            placeholder="Search by file name"
+                            width={{ base: "100%", md: "23vw" }}
+                            placeholder="Search by id or team name"
                             onChange={(e) => {
                                 setSearchMsg(e.target.value);
                             }}
@@ -115,46 +111,6 @@ export const CustomTable = ({
                             </option>
                         ))}
                     </Select>
-                </Flex>
-
-                <Flex
-                    gap={{ base: 2, lg: 5 }}
-                    mx={{ base: 0, md: 0, sm: "auto" }}
-                    direction={{ base: "column", lg: "row" }}
-                >
-                    <Flex>
-                        <Input
-                            min={MIN_DATE}
-                            textAlign="center"
-                            max={CURRENT_DATE}
-                            type="datetime-local"
-                            value={tableState.from}
-                            onChange={(e) => {
-                                setTableState({
-                                    ...tableState,
-                                    from: e.target.value,
-                                });
-                            }}
-                        />
-                    </Flex>
-
-                    <Text m="auto">To</Text>
-
-                    <Flex>
-                        <Input
-                            min={MIN_DATE}
-                            textAlign="center"
-                            max={CURRENT_DATE}
-                            type="datetime-local"
-                            value={tableState.to}
-                            onChange={(e) => {
-                                setTableState({
-                                    ...tableState,
-                                    to: e.target.value,
-                                });
-                            }}
-                        />
-                    </Flex>
                 </Flex>
             </Flex>
 

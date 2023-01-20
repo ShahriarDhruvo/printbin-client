@@ -1,6 +1,14 @@
 import { ToastPosition } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 
+export interface FilesT {
+    id: string;
+    url?: string;
+    time: string;
+    status?: string;
+    team_name?: string;
+    room_number?: number;
+}
 export interface ErrorT {
     help?: string;
     status?: number;
@@ -9,14 +17,12 @@ export interface ErrorT {
 
 export interface AuthInfoT {
     role: number;
-    email: string;
     username: string;
-    photo_url: string;
+    team_name: string;
+    room_number: string;
 }
 
 export interface TableStateT {
-    to: string;
-    from: string;
     page: number;
     limit: number;
     search: string;

@@ -1,33 +1,59 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Input, Box, Text, Flex, Button, Avatar } from "@chakra-ui/react";
 
+import { API_ENDPOINTS, fetchData, RANDOM_AVATAR, StatusT } from "..";
 import { FeatureWrapper } from "../wrappers/feature";
+import router from "next/router";
+import { AuthenticationContext } from "../../contexts/authContext";
+import { CustomSpinner, CustomError } from "../frequents";
+import { AppRoutesUI } from "../../config";
 
 export const SigninForm = (): JSX.Element => {
+    const [status, setStatus] = useState<StatusT>(undefined);
+    const { setAuthInfo } = useContext(AuthenticationContext);
     const [credentials, setCredentials] = useState({
-        username: "",
-        password: "",
+        username: "admin",
+        password: "password",
     });
+
+    const handleSubmit = (): void => {
+        const headers: any = {
+            Username: credentials.username,
+            Password: credentials.password,
+        };
+
+        void fetchData({
+            headers,
+            setStatus,
+            method: "POST",
+            setData: setAuthInfo,
+            url: API_ENDPOINTS().auth.login,
+            onSuccess: async () => await router.push(AppRoutesUI.HOME()),
+        });
+    };
+
+    if (status === "loading") return <CustomSpinner />;
+    if (typeof status === "object") return <CustomError error={status} />;
 
     return (
         <FeatureWrapper>
+            <Avatar
+                mt={5}
+                mx="auto"
+                src={RANDOM_AVATAR}
+                border="3px solid #FEB2B2"
+                name={credentials.username}
+                backgroundColor="orange.200"
+                width={{ base: "8em", sm: "10em" }}
+                height={{ base: "8em", sm: "10em" }}
+            />
+
             <Flex
-                p={4}
+                p={5}
                 gap={5}
                 direction="column"
-                minWidth={{ base: "85vw", md: "30em" }}
+                width={{ base: "85vw", md: "30em" }}
             >
-                <Avatar
-                    m="auto"
-                    width="10em"
-                    height="10em"
-                    name={credentials.username}
-                    src={
-                        "https://api.dicebear.com/5.x/adventurer/svg?seed=" +
-                        (Math.random() + 1).toString(36).substring(7)
-                    }
-                />
-
                 <Box>
                     <Text mb="8px">Username</Text>
                     <Input
@@ -57,8 +83,18 @@ export const SigninForm = (): JSX.Element => {
                     />
                 </Box>
 
-                <Button width="100%" colorScheme="orange">
-                    Signin
+                <Text fontSize="xs" color="blue.600" textAlign="center">
+                    Ask
+                    <span style={{ color: "red" }}> event origanizers</span> for
+                    your credentials
+                </Text>
+
+                <Button
+                    width="100%"
+                    colorScheme="orange"
+                    onClick={handleSubmit}
+                >
+                    Sign in
                 </Button>
             </Flex>
         </FeatureWrapper>

@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 
-import { IMG_URLS, NavLinksT } from "../helpers";
+import { IMG_URLS, NavLinksT, RANDOM_AVATAR } from "../helpers";
 import { useTranslation, AppRoutesUI } from "../../config";
 import { AuthenticationContext } from "../../contexts/authContext";
 
@@ -71,7 +71,7 @@ export const NavItem = ({
 export const NavFixedItems = (): JSX.Element => {
     const { t } = useTranslation();
     const { pathname } = useRouter();
-    // const isAdminPath = pathname.split("/")[1] === "admin";
+    const isAdminPath = pathname.split("/")[1] === "admin";
     const { authInfo } = useContext(AuthenticationContext);
 
     const profileTitle = useBreakpointValue(
@@ -104,18 +104,19 @@ export const NavFixedItems = (): JSX.Element => {
                                 }
                             />
                         )} */}
-
-                    <NavItem
-                        title={t.admin}
-                        href={AppRoutesUI.ADMIN()}
-                        img={
-                            <Img
-                                me={3}
-                                width="1.9em"
-                                src={IMG_URLS().others.admin}
-                            />
-                        }
-                    />
+                    {!isAdminPath && (
+                        <NavItem
+                            title={t.admin}
+                            href={AppRoutesUI.ADMIN()}
+                            img={
+                                <Img
+                                    me={3}
+                                    width="1.9em"
+                                    src={IMG_URLS().others.admin}
+                                />
+                            }
+                        />
+                    )}
                 </>
             )}
 
@@ -125,7 +126,7 @@ export const NavFixedItems = (): JSX.Element => {
                         img={
                             <Avatar
                                 size="sm"
-                                src={authInfo.photo_url}
+                                src={RANDOM_AVATAR}
                                 me={profileTitle === undefined ? 0 : 2}
                             />
                         }
