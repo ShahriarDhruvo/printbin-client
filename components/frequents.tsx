@@ -1,9 +1,8 @@
 import { IconType } from "react-icons";
 import { useRouter } from "next/router";
-import React, { PropsWithChildren } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { IoMdHelp } from "react-icons/io";
 import { FiRefreshCw } from "react-icons/fi";
+import React, { PropsWithChildren } from "react";
 import {
     Box,
     Flex,
@@ -16,6 +15,7 @@ import {
     HStack,
     Spinner,
     AlertTitle,
+    Heading,
     AlertDescription,
     Modal,
     ModalBody,
@@ -26,10 +26,12 @@ import {
     ModalOverlay,
     useDisclosure,
     Tooltip,
+    Progress,
+    Img,
 } from "@chakra-ui/react";
 
-import { FeatureWrapper } from ".";
-import { ErrorT, TitleProps } from "./helpers";
+import { ErrorT, IMG_URLS, TitleProps } from "./helpers";
+import { FeatureWrapper } from "./wrappers/feature";
 import { AppRoutesUI, spacing, useTranslation } from "../config";
 
 export const Title = ({ icon, title, mt }: TitleProps): JSX.Element => (
@@ -41,11 +43,41 @@ export const Title = ({ icon, title, mt }: TitleProps): JSX.Element => (
     </Flex>
 );
 
+export const CustomProgress = ({
+    title,
+    progress,
+}: {
+    title?: string;
+    progress: number;
+}): JSX.Element => {
+    const { t } = useTranslation();
+
+    return (
+        <Flex direction="column" width={{ base: "80vw", sm: "25em" }}>
+            <Heading mx="auto" mb={2} fontSize={20}>
+                {title !== undefined ? title : t.uploading}
+            </Heading>
+            <Flex>
+                <Progress
+                    me={3}
+                    my="auto"
+                    width="100%"
+                    rounded="4px"
+                    value={progress}
+                    colorScheme="orange"
+                    border="0.5px solid lightgray"
+                />
+                <Text mt={1}>{progress}%</Text>
+            </Flex>
+        </Flex>
+    );
+};
+
 export const CustomSpinner = ({ text }: { text?: string }): JSX.Element => {
     const { t } = useTranslation();
 
     return (
-        <Flex direction="column">
+        <Flex direction="column" textAlign="center">
             <Spinner
                 mx="auto"
                 size="xl"
@@ -65,6 +97,7 @@ export const CustomError = ({ error }: { error: ErrorT }): JSX.Element => {
     return (
         <Alert
             p={4}
+            mx="auto"
             status="error"
             variant="subtle"
             borderRadius="xl"
@@ -160,8 +193,12 @@ export const SignInPrompt = (): JSX.Element => {
                         href={AppRoutesUI.SIGN_IN()}
                         textDecoration="none !important"
                     >
-                        <Icon me={2} as={FcGoogle} fontSize="xl" />
-                        <Text mt={1}>{t.sign_in_with_google}</Text>
+                        <Img
+                            me={2}
+                            width="1.5em"
+                            src={IMG_URLS().others.sign_in}
+                        />
+                        <Text>Sign in</Text>
                     </Button>
                 </Box>
             </Flex>
@@ -185,6 +222,7 @@ export const ButtonWithConfirmation = ({
     size,
     modalBody,
     modalTitle,
+    modalStyle,
     toolTipLabel,
     confirmAction,
     actionIconFont,
@@ -196,6 +234,7 @@ export const ButtonWithConfirmation = ({
     size?: string;
     modalBody: string;
     modalTitle?: string;
+    modalStyle?: object;
     toolTipLabel?: string;
     actionIconFont?: string;
     actionButtonImg?: string;
@@ -228,7 +267,12 @@ export const ButtonWithConfirmation = ({
                 </Button>
             </CustomTooltip>
 
-            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <Modal
+                isCentered
+                isOpen={isOpen}
+                onClose={onClose}
+                size={{ base: "xs", sm: "md" }}
+            >
                 <ModalOverlay />
                 <ModalContent>
                     {modalTitle !== undefined && (
@@ -236,7 +280,7 @@ export const ButtonWithConfirmation = ({
                     )}
                     <ModalCloseButton />
 
-                    <ModalBody>{modalBody}</ModalBody>
+                    <ModalBody style={modalStyle}>{modalBody}</ModalBody>
 
                     <ModalFooter>
                         <Button

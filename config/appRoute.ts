@@ -16,5 +16,6 @@ export const AppRoutesUI = {
     USER: () => AppRoutesUI.Root + "user",
     ADMIN: () => AppRoutesUI.Root + "admin",
     SIGN_IN: () => AppRoutesUI.Root + "signin",
+    UPLOAD_CRED: () => AppRoutesUI.ADMIN() + "/upload",
     COMPLETE: () => AppRoutesUI.ADMIN() + "/completed",
 };

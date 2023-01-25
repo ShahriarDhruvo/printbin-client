@@ -1,89 +1,59 @@
+import useSWR from "swr";
 import { Td, Tr } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 import { CustomTable } from "./customTable";
 import { CustomError, CustomSpinner } from "./frequents";
 import {
-    FilesT,
-    StatusT,
+    DataT,
+    ErrorT,
     TableStateT,
     TableStateDV,
     processValue,
-    DUMMY_FILES,
+    API_ENDPOINTS,
+    REFRESH_INTERVAL,
 } from "./helpers";
 
-export const ShowFiles = (): JSX.Element => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [status, setStatus] = useState<StatusT>(undefined);
+export const OwnRequests = (): JSX.Element => {
     const [tableState, setTableState] = useState<TableStateT>(TableStateDV);
-    const [data, setData] = useState<{
-        files: FilesT[];
-        totalPageCount: number;
-    }>({
-        files: [],
-        totalPageCount: 0,
+    const [apiParams, setApiParams] = useState<object | undefined>(undefined);
+    const { data, error } = useSWR<DataT, ErrorT>(apiParams, {
+        refreshInterval: REFRESH_INTERVAL,
     });
 
-    const headers = ["s/n", "id", "status", "time"];
+    const headers = ["s/n", "tracking_id", "status", "time"];
 
-    // Dummy content
     useEffect(() => {
-        setData({ ...data, files: DUMMY_FILES });
+        if (tableState !== undefined) {
+            const queryParams = {
+                page: tableState.page,
+                limit: tableState.limit,
+                search: tableState.search,
+            };
 
+            setApiParams({
+                queryParams,
+                method: "GET",
+                url: API_ENDPOINTS().file.base,
+            });
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // useEffect(() => {
-    //     sessionStorage.setItem("end-date", tableState.to);
-    //     sessionStorage.setItem("start-date", tableState.from);
-    // }, [tableState.from, tableState.to]);
-
-    // useEffect(() => {
-    //     if (tableState !== undefined) {
-    //         const queryParams = {
-    //             language: locale,
-    //             page: tableState.page,
-    //             limit: tableState.limit,
-    //             search: tableState.search,
-    //         };
-
-    //         const headers = {
-    //             "End-Date": convertToUTCFormat(tableState.to),
-    //             "Start-Date": convertToUTCFormat(tableState.from),
-    //         };
-
-    //         void fetchData({
-    //             headers,
-    //             setStatus,
-    //             queryParams,
-    //             method: "GET",
-    //             url: API_ENDPOINTS().admin.base,
-    //             setData: (d) => {
-    //                 setData({
-    //                     ...data,
-    //                     files: d.file_info,
-    //                     totalPageCount: d.total_pages,
-    //                 });
-    //             },
-    //         });
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [tableState, locale]);
+    }, [tableState]);
 
     const handleStatusColor = (status: string): string => {
         if (status === "pending") return "orange.500";
         else return "green";
     };
 
-    if (status === "loading") return <CustomSpinner />;
-    if (typeof status === "object") return <CustomError error={status} />;
+    if (error != null) return <CustomError error={error} />;
+    if (data == null) return <CustomSpinner />;
 
     return (
         <CustomTable
             headers={headers}
             tableState={tableState}
             setTableState={setTableState}
-            totalPageCount={data.totalPageCount}
+            totalPageCount={data.total_pages}
         >
             {data.files.map((file, id) => (
                 <Tr
@@ -100,7 +70,7 @@ export const ShowFiles = (): JSX.Element => {
                         textAlign="center"
                         textOverflow="ellipsis"
                     >
-                        {file.id}
+                        {file.tracking_id}
                     </Td>
 
                     {file.status !== undefined && (
@@ -113,7 +83,7 @@ export const ShowFiles = (): JSX.Element => {
                     )}
 
                     <Td textAlign="right">
-                        {new Date(file.time).toLocaleString("en-US", {
+                        {new Date(file.created_at).toLocaleString("en-US", {
                             hour12: true,
                             month: "short",
                             day: "numeric",

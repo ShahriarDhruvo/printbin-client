@@ -1,19 +1,14 @@
-import {
-    Flex,
-    Avatar,
-    Text,
-    Icon,
-    Img,
-    useBreakpointValue,
-} from "@chakra-ui/react";
+import { Flex, Text, Icon, Img, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 
-import { IMG_URLS, NavLinksT, RANDOM_AVATAR } from "../helpers";
+import { IMG_URLS, NavLinksT } from "../helpers";
 import { useTranslation, AppRoutesUI } from "../../config";
 import { AuthenticationContext } from "../../contexts/authContext";
+import { FiLogOut } from "react-icons/fi";
+import { ButtonWithConfirmation } from "../frequents";
 
 export const NavItem = ({
     mt,
@@ -72,11 +67,11 @@ export const NavFixedItems = (): JSX.Element => {
     const { t } = useTranslation();
     const { pathname } = useRouter();
     const isAdminPath = pathname.split("/")[1] === "admin";
-    const { authInfo } = useContext(AuthenticationContext);
+    const { authInfo, handleLogout } = useContext(AuthenticationContext);
 
     const profileTitle = useBreakpointValue(
         {
-            md: authInfo != null ? authInfo.username.split(" ")[0] : t.sign_in,
+            md: authInfo != null ? "Sign Out" : t.sign_in,
             base: undefined,
         },
         {
@@ -85,11 +80,11 @@ export const NavFixedItems = (): JSX.Element => {
     );
 
     return (
-        <Flex gap={3} alignItems="center">
+        <Flex gap={1} alignItems="center">
             {/* I am hiding it in mobile view with the help of same logic */}
             {profileTitle !== undefined && (
                 <>
-                    {/* {!isAdminPath &&
+                    {!isAdminPath &&
                         authInfo?.role !== undefined &&
                         authInfo.role > 0 && (
                             <NavItem
@@ -103,37 +98,28 @@ export const NavFixedItems = (): JSX.Element => {
                                     />
                                 }
                             />
-                        )} */}
-                    {!isAdminPath && (
-                        <NavItem
-                            title={t.admin}
-                            href={AppRoutesUI.ADMIN()}
-                            img={
-                                <Img
-                                    me={3}
-                                    width="1.9em"
-                                    src={IMG_URLS().others.admin}
-                                />
-                            }
-                        />
-                    )}
+                        )}
                 </>
             )}
 
-            {authInfo != null ? (
+            {authInfo !== undefined ? (
                 <>
-                    <NavItem
-                        img={
-                            <Avatar
-                                size="sm"
-                                src={RANDOM_AVATAR}
-                                me={profileTitle === undefined ? 0 : 2}
-                            />
-                        }
-                        title={profileTitle}
-                        href={AppRoutesUI.USER()}
-                        highlight={AppRoutesUI.USER() === pathname}
-                    />
+                    <Flex pr="0.7em" pl="0.4em" cursor="pointer">
+                        <ButtonWithConfirmation
+                            size="sm"
+                            actionIconFont="md"
+                            modalTitle={t.signout}
+                            actionButtonIcon={FiLogOut}
+                            actionButtonText={t.signout}
+                            confirmAction={handleLogout}
+                            modalBody={t.signout_warning}
+                            actionButtonStyles={{
+                                color: "red.600",
+                                variant: "outline",
+                                colorScheme: "transparent",
+                            }}
+                        />
+                    </Flex>
                 </>
             ) : (
                 <NavItem
@@ -169,6 +155,11 @@ export const NavLinks = (): NavLinksT[] => {
                   title: "Completed Files",
                   href: AppRoutesUI.COMPLETE(),
                   imgUrl: IMG_URLS().features.completed_files,
+              },
+              {
+                  title: "Upload Credentials",
+                  href: AppRoutesUI.UPLOAD_CRED(),
+                  imgUrl: IMG_URLS().features.upload_text,
               },
           ]
         : [

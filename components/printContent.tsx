@@ -29,7 +29,7 @@ export const PrintContent = ({
                 styles !== undefined
                     ? styles
                     : {
-                          fontSize: 17,
+                          fontSize: 15,
                           backgroundColor: "#f5f5f5",
                           fontFamily:
                               "ui-monospace, SFMono-Regular, SF Mono, Consolas, Liberation Mono, Menlo, monospace",

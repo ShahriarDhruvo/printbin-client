@@ -12,8 +12,8 @@ export const SigninForm = (): JSX.Element => {
     const [status, setStatus] = useState<StatusT>(undefined);
     const { setAuthInfo } = useContext(AuthenticationContext);
     const [credentials, setCredentials] = useState({
-        username: "admin",
-        password: "password",
+        username: "",
+        password: "",
     });
 
     const handleSubmit = (): void => {

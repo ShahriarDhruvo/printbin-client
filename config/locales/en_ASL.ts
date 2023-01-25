@@ -36,7 +36,7 @@ export const enASL = {
         select_language: "Select Language",
 
         signout_warning:
-            "You will be signed out from this account and will be asked to authenticate by Google to sign back in!",
+            "You will be signed out from this account and will be asked to authenticate by a Pre Assigned credentials to sign back in!",
 
         // frequents
         help: "Help",
