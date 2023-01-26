@@ -70,7 +70,7 @@ export const CustomTable = ({
                         <Input
                             value={searchMsg}
                             width={{ base: "100%", md: "23vw" }}
-                            placeholder="Search by id or team name"
+                            placeholder="Search by tracking id or team name"
                             onChange={(e) => {
                                 setSearchMsg(e.target.value);
                             }}

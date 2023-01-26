@@ -20,7 +20,7 @@ int main() {
 }`;
 
 export const ROOM_COUNT = 7;
-export const REFRESH_INTERVAL = 10_000;
+export const REFRESH_INTERVAL = 5000;
 export const genID = customAlphabet("0123456789abcdefghijklmnpqrstuvwxyz", 8);
 export const RANDOM_AVATAR =
     "https://api.dicebear.com/5.x/micah/svg?seed=" +

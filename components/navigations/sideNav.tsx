@@ -37,7 +37,7 @@ export const SideNav = ({
                 <DrawerBody>
                     <Flex direction="column" height="100%">
                         <Flex my="auto" direction="column">
-                            <Stack as="nav" mx="auto" spacing={10}>
+                            <Stack as="nav" mx="auto" spacing={5}>
                                 {links.map(({ imgUrl, title, href }) => (
                                     <NavItem
                                         mt={0}
@@ -81,7 +81,7 @@ export const SideNav = ({
                         my={3}
                         as="span"
                         width="100%"
-                        fontSize="sm"
+                        fontSize="xs"
                         color="gray.500"
                         fontWeight="600"
                         textAlign="center"

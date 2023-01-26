@@ -47,7 +47,11 @@ export const RequestedContents = ({
     const toast = useToast();
     const pdfContentRef = useRef<any>(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [refreshList, setRefreshList] = useState(false);
     const [status, setStatus] = useState<StatusT>(undefined);
+    const [currentlySelected, setCurrentlySelected] = useState<
+        string | undefined
+    >(undefined);
     const [tableState, setTableState] = useState<TableStateT>(TableStateDV);
     const [apiParams, setApiParams] = useState<object | undefined>(undefined);
     const { data, error } = useSWR<DataT, ErrorT>(apiParams, {
@@ -93,7 +97,7 @@ export const RequestedContents = ({
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tableState, permittedRooms]);
+    }, [tableState, permittedRooms, refreshList]);
 
     const updateContent = async (trakingId: string): Promise<void> => {
         setStatus("loading");
@@ -113,15 +117,17 @@ export const RequestedContents = ({
         });
     };
 
-    const handleComplete = (trackingId: string): void => {
+    const handleComplete = (): void => {
         void fetchData({
             setStatus,
             method: "PATCH",
             headers: {
-                "Tracking-ID": trackingId,
+                "Tracking-ID": currentlySelected,
             },
             url: API_ENDPOINTS().print.base,
             onSuccess: (description) => {
+                setRefreshList(!refreshList);
+
                 toast({
                     ...ToastDV,
                     description,
@@ -206,12 +212,18 @@ export const RequestedContents = ({
                                         }}
                                         onAfterPrint={() => {
                                             setStatus(undefined);
+                                            setCurrentlySelected(
+                                                file.tracking_id
+                                            );
                                             setContentOptions({
                                                 resolve: undefined,
                                                 content: undefined,
                                             });
-                                            requestType === "pending" &&
-                                                onOpen();
+
+                                            setTimeout(() => {
+                                                requestType === "pending" &&
+                                                    onOpen();
+                                            }, 1000);
                                         }}
                                         trigger={() => {
                                             return (
@@ -272,9 +284,7 @@ export const RequestedContents = ({
                                                     colorScheme="orange"
                                                     onClick={() => {
                                                         onClose();
-                                                        handleComplete(
-                                                            file.tracking_id
-                                                        );
+                                                        handleComplete();
                                                     }}
                                                 >
                                                     Yes, Complete it

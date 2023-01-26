@@ -14,7 +14,11 @@ import {
     REFRESH_INTERVAL,
 } from "./helpers";
 
-export const OwnRequests = (): JSX.Element => {
+export const OwnRequests = ({
+    refreshList,
+}: {
+    refreshList: boolean;
+}): JSX.Element => {
     const [tableState, setTableState] = useState<TableStateT>(TableStateDV);
     const [apiParams, setApiParams] = useState<object | undefined>(undefined);
     const { data, error } = useSWR<DataT, ErrorT>(apiParams, {
@@ -38,7 +42,7 @@ export const OwnRequests = (): JSX.Element => {
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tableState]);
+    }, [tableState, refreshList]);
 
     const handleStatusColor = (status: string): string => {
         if (status === "pending") return "orange.500";

@@ -104,7 +104,11 @@ export const NavFixedItems = (): JSX.Element => {
 
             {authInfo !== undefined ? (
                 <>
-                    <Flex pr="0.7em" pl="0.4em" cursor="pointer">
+                    <Flex
+                        pl="0.4em"
+                        cursor="pointer"
+                        pr={{ base: 0, md: "0.7em" }}
+                    >
                         <ButtonWithConfirmation
                             size="sm"
                             actionIconFont="md"

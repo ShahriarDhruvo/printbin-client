@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
-import { Box, Flex, useToast } from "@chakra-ui/react";
+import { Box, Flex, Text, useToast } from "@chakra-ui/react";
 import "@uiw/react-textarea-code-editor/dist.css";
 
 import { PrintContent } from "./printContent";
@@ -21,7 +21,13 @@ import {
     ToastDV,
 } from "./helpers";
 
-export const TextContent = (): JSX.Element => {
+export const TextContent = ({
+    refreshList,
+    setRefreshList,
+}: {
+    refreshList: boolean;
+    setRefreshList: (params: boolean) => void;
+}): JSX.Element => {
     const toast = useToast();
     const [code, setCode] = useState(EXAMPLE_CODE);
     const { authInfo } = useContext(AuthenticationContext);
@@ -74,12 +80,14 @@ export const TextContent = (): JSX.Element => {
                     setRemainingPage(data.available_print_page_count);
                 },
                 onSuccess: (description) => {
+                    setRefreshList(!refreshList);
+                    setCode(EXAMPLE_CODE);
+
                     toast({
                         ...ToastDV,
                         description,
                         status: "success",
                     });
-                    setCode(EXAMPLE_CODE);
                 },
             });
         } else {
@@ -96,7 +104,7 @@ export const TextContent = (): JSX.Element => {
 
     return (
         <>
-            {authInfo !== undefined && authInfo.username !== "admi" && (
+            {authInfo !== undefined && authInfo.username !== "admin" && (
                 <FeatureWrapper>
                     <Flex
                         p={4}
@@ -142,30 +150,40 @@ export const TextContent = (): JSX.Element => {
                         <PrintContent content={code} setContent={setCode} />
                     </Box>
 
-                    <Box mt={4} float="right">
-                        <ButtonWithConfirmation
-                            actionIconFont="md"
-                            actionButtonText="Request"
-                            modalTitle="Request to Print"
-                            confirmAction={handleRequest}
-                            actionButtonIcon={FiUploadCloud}
-                            actionButtonStyles={{
-                                colorScheme: "orange",
-                            }}
-                            modalStyle={{ color: "red" }}
-                            modalBody={
-                                remainingPage !== undefined
-                                    ? `This action will reduce your remaining page count to ${
-                                          remainingPage -
-                                          Math.ceil(
-                                              code.split(/\r\n|\r|\n/).length /
-                                                  57
-                                          )
-                                      }. Are you sure you want to print this content?`
-                                    : "Are you sure you want to print this content?"
-                            }
-                        />
-                    </Box>
+                    {authInfo !== undefined && authInfo.username === "admin" ? (
+                        <Text mt={4} textAlign="center" textColor="red.500">
+                            Sorry, this feature is not supported for admins!
+                        </Text>
+                    ) : remainingPage !== undefined && remainingPage > 0 ? (
+                        <Box mt={4} float="right">
+                            <ButtonWithConfirmation
+                                actionIconFont="md"
+                                actionButtonText="Request"
+                                modalTitle="Request to Print"
+                                confirmAction={handleRequest}
+                                actionButtonIcon={FiUploadCloud}
+                                actionButtonStyles={{
+                                    colorScheme: "orange",
+                                }}
+                                modalStyle={{ color: "red" }}
+                                modalBody={
+                                    remainingPage !== undefined
+                                        ? `This action will reduce your remaining page count to ${
+                                              remainingPage -
+                                              Math.ceil(
+                                                  code.split(/\r\n|\r|\n/)
+                                                      .length / 57
+                                              )
+                                          }. Are you sure you want to print this content?`
+                                        : "Are you sure you want to print this content?"
+                                }
+                            />
+                        </Box>
+                    ) : (
+                        <Text mt={4} textAlign="center" textColor="red.500">
+                            You have reached the maximum print limit for a team!
+                        </Text>
+                    )}
                 </Box>
             </FeatureWrapper>
         </>

@@ -1,6 +1,6 @@
 {
     "name": "printbin",
-    "version": "0.1.2-beta",
+    "version": "0.2.0-beta",
     "private": true,
     "scripts": {
         "dev": "next dev",
@@ -22,7 +22,6 @@
         "@next/font": "13.1.1",
         "@uiw/react-textarea-code-editor": "^2.0.6",
         "axios": "^1.2.2",
-        "file-saver": "^2.0.5",
         "framer-motion": "^8.2.4",
         "nanoid": "^4.0.0",
         "next": "13.1.1",

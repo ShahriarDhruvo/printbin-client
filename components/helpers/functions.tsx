@@ -1,14 +1,5 @@
 import axios from "axios";
-import router from "next/router";
-import { RefObject, useEffect } from "react";
-
 import { StatusT } from "./types";
-
-export const changeLocale = (locale: string): void => {
-    void router.push(router.pathname, router.asPath, {
-        locale,
-    });
-};
 
 export const processValue = (val: any): any => {
     if (typeof val === "string") {
@@ -22,22 +13,6 @@ export const processValue = (val: any): any => {
     }
 
     return val;
-};
-
-export const useIsOverflow = (
-    ref: RefObject<HTMLDivElement>,
-    action: (params: boolean) => void
-): void => {
-    useEffect(() => {
-        const { current } = ref;
-
-        if (current !== null) {
-            action(
-                current.scrollHeight > current.clientHeight ||
-                    current.scrollWidth > current.clientWidth
-            );
-        }
-    }, [action, ref]);
 };
 
 export const fetchData = async ({
