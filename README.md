@@ -7,3 +7,7 @@ A web client that automates the printing of code snippets during programming com
 -   **First**: yarn install
 -   **Second**: yarn build && yarn start
 -   **For dev**: yarn dev
+
+## Demo
+
+A free vercel deployment can be found [here](https://printbin.vercel.app/).
